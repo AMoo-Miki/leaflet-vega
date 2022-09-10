@@ -1,6 +1,6 @@
-import json from 'rollup-plugin-json';
-import nodeResolve from 'rollup-plugin-node-resolve';
-import babel from 'rollup-plugin-babel';
+import json from '@rollup/plugin-json';
+import nodeResolve from '@rollup/plugin-node-resolve';
+import babel from '@rollup/plugin-babel';
 
 const pkg = require('./package.json');
 
@@ -27,8 +27,8 @@ export default {
     nodeResolve(),
     json(),
     babel({
-      exclude: 'node_modules/**'
+      exclude: 'node_modules/**',
+      babelHelpers: 'runtime',
     })
-  ],
-  legacy: true // Needed to create files loadable by IE8
+  ]
 };

@@ -17,10 +17,13 @@ L.VegaLayer = (L.Layer ? L.Layer : L.Class).extend({
     // If Vega spec creates controls (inputs), put them all into this container
     bindingsContainer: undefined,
 
-    // Options to be passed to the Vega`s parse method
+    // Config to be passed to the Vega`s parse method
     parseConfig: undefined,
 
-    // Options to be passed ot the Vega`s View constructor
+    // Options to be passed to the Vega`s parse method
+    parseOptions: undefined,
+
+    // Config to be passed ot the Vega`s View constructor
     viewConfig: undefined,
 
     // If true, graph will be repainted only after the map has finished moving (faster)
@@ -49,7 +52,7 @@ L.VegaLayer = (L.Layer ? L.Layer : L.Class).extend({
           const handler = view.Leaflet_setMapViewHandler;
           if (!handler) throw new Error('setMapView() is not defined for this graph');
           view.runAfter(() => handler(...args));
-        }
+        },
       );
     }
     this._ignoreSignals = 0;
@@ -99,7 +102,7 @@ L.VegaLayer = (L.Layer ? L.Layer : L.Class).extend({
 
       const { vega, viewConfig } = this.options;
 
-      const dataflow = vega.parse(this._spec, this.options.parseConfig);
+      const dataflow = vega.parse(this._spec, this.options.parseConfig, this.options.parseOptions);
 
       if (viewConfig && viewConfig.loader) {
         const oldLoad = viewConfig.loader.load.bind(viewConfig.loader);
@@ -149,8 +152,8 @@ L.VegaLayer = (L.Layer ? L.Layer : L.Class).extend({
         }
 
         function checkArray(val) {
-          if (!Array.isArray(val) || val.length !== 2 ||
-            typeof val[0] !== 'number' || typeof val[1] !== 'number'
+          if (!Array.isArray(val) || val.length !== 2
+            || typeof val[0] !== 'number' || typeof val[1] !== 'number'
           ) {
             throwError();
           }
@@ -161,13 +164,10 @@ L.VegaLayer = (L.Layer ? L.Layer : L.Class).extend({
         let lat;
         let zoom;
         switch (args.length) {
-          default:
-            throwError();
-            break;
           case 1: {
             const arg = args[0];
-            if (Array.isArray(arg) && arg.length === 2 &&
-              Array.isArray(arg[0]) && Array.isArray(arg[1])
+            if (Array.isArray(arg) && arg.length === 2
+              && Array.isArray(arg[0]) && Array.isArray(arg[1])
             ) {
               // called with a bounding box, need to reverse order
               const [lng1, lat1] = checkArray(arg[0]);
@@ -191,6 +191,8 @@ L.VegaLayer = (L.Layer ? L.Layer : L.Class).extend({
           case 3:
             [lat, lng, zoom] = args;
             break;
+          default:
+            throwError();
         }
 
         if (lat !== undefined && lng !== undefined) {
@@ -291,12 +293,11 @@ L.VegaLayer = (L.Layer ? L.Layer : L.Class).extend({
       };
 
       // update if any of the signal's values have changed
-      const changed =
-        sendSignal('width', size.x) +
-        sendSignal('height', size.y) +
-        sendSignal('latitude', center.lat) +
-        sendSignal('longitude', center.lng) +
-        sendSignal('zoom', zoom);
+      const changed = sendSignal('width', size.x)
+        + sendSignal('height', size.y)
+        + sendSignal('latitude', center.lat)
+        + sendSignal('longitude', center.lng)
+        + sendSignal('zoom', zoom);
 
       if (changed > 0 || force) {
         await view.runAsync();

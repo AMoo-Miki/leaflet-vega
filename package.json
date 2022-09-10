@@ -1,11 +1,12 @@
 {
-  "name": "leaflet-vega",
-  "version": "0.8.6",
+  "name": "@amoo-miki/leaflet-vega",
+  "version": "0.8.8",
   "description": "Vega layer for Leaflet",
-  "homepage": "https://github.com/nyurik/leaflet-vega",
+  "homepage": "https://github.com/AMoo-Miki/leaflet-vega",
   "author": "Yuri Astrakhan <YuriAstrakhan@gmail.com>",
   "contributors": [
-    "Nathan Reese <reese.nathan@gmail.com>"
+    "Nathan Reese <reese.nathan@gmail.com>",
+    "AMoo-Miki"
   ],
   "keywords": [
     "vega",
@@ -18,33 +19,30 @@
     "format": "es6",
     "main": "src/VegaLayer.js"
   },
-  "repository": "nyurik/leaflet-vega",
+  "repository": "AMoo-Miki/leaflet-vega",
   "license": "BSD-2-Clause",
   "dependencies": {
     "vega-spec-injector": "^0.0.2"
   },
   "devDependencies": {
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-config-kartotherian": "^0.0.5",
-    "babel-core": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-plugin-external-helpers": "^6.22.0",
-    "babel-plugin-transform-async-to-generator": "^6.24.1",
-    "eslint": "^4.17.0",
-    "eslint-config-mourner": "^2.0.3",
-    "rollup": "^0.55.3",
-    "rollup-plugin-babel": "^3.0.3",
-    "rollup-plugin-json": "^2.3.0",
-    "rollup-plugin-node-resolve": "^3.0.2",
-    "rollup-watch": "^4.3.1"
+    "@babel/core": "^7.19.0",
+    "@babel/plugin-transform-runtime": "^7.18.10",
+    "@babel/plugin-transform-async-to-generator": "^7.18.6",
+    "@babel/preset-env": "^7.19.0",
+    "@rollup/plugin-babel": "^5.3.1",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^14.0.1",
+    "eslint": "^8.23.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-kartotherian": "^0.0.2",
+    "eslint-config-mourner": "^3.0.0",
+    "rollup": "^2.79.0"
   },
   "scripts": {
     "test": "eslint src",
-    "lint": "eslint src/*.js test/test*.js",
-    "pretest": "npm run lint",
-    "precommit": "npm run lint",
+    "precommit": "npm run test",
     "build": "rollup -c rollup.config.js",
-    "prepare": "npm run lint && npm run build",
+    "prepare": "npm run test && npm run build",
     "dev": "rollup -c rollup.config.js -w"
   }
 }
